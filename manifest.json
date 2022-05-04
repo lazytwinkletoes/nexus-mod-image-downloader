@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Nexus Mod Image Downloader",
+  "description": "Chrome extension for downloading image from nexus mods provided by mod author",
+  "version": "0.0.1",
+  "icons": {
+    "16": "logo/logo-16.png",
+    "48": "logo/logo-48.png",
+    "128": "logo/logo-128.png"
+  },
+  "options_page": "settings/settings.html",
+  "action": {
+    "default_title": "Chrome Addon v3 Starter",
+    "default_popup": "popup/popup.html"
+  },
+  "permissions": ["downloads"],
+  "host_permissions": ["*://*/*"],
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "js": ["foreground.js"],
+      "matches": ["https://www.nexusmods.com/*"]
+    }
+  ]
+}
