@@ -14,30 +14,39 @@ let modId = "UnknownModId";
 let gameName = "UnknownGameName";
 let modName = "UnknownModName";
 
-function handleDownload(list, index) {
+function handleDownload(list, index, user_image) {
   if (list.length < index) {
     return;
   }
   let url = list[index];
   let filename = url.substr(url.lastIndexOf("/") + 1);
+  let filepath = `Nexus Image Downloader`;
+  if (user_image) {
+    filepath = `Nexus Image Downloader/${gameId}_${gameName}/${modId}_${modName}/Users Images/${filename}`;
+  } else {
+    filepath = `Nexus Image Downloader/${gameId}_${gameName}/${modId}_${modName}/${filename}`;
+  }
   chrome.downloads.download(
     {
       url: url,
-      filename: `Nexus Image Downloader/${gameId}_${gameName}/${modId}_${modName}/${filename}`,
+      filename: filepath,
     },
     () => {
-      handleDownload(list, index + 1);
+      handleDownload(list, index + 1, user_image);
     }
   );
 }
 
 chrome.runtime.onMessage.addListener((message, callback) => {
   console.log(message);
+  if (!message || !message.from || message.from != "foreground") {
+    return;
+  }
   gameId = message.gameId;
   modId = message.modId;
   gameName = message.gameName;
   modName = message.modName;
-  handleDownload(message.urlList, 0);
+  handleDownload(message.urlList, 0, message.user_image);
 });
 
 // If you want to import a file that is deeper in the file hierarchy of your
